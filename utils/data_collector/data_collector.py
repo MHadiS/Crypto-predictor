@@ -9,16 +9,19 @@ class DataCollector:
     """
     A class for collecting currencies data to train the models
     """
-    def get_data(self, start_date: datetime, end_date: datetime, ticker: str):
+    def get_data(self, start_date: datetime, end_date: datetime, ticker: str) -> pd.DataFrame:
         """Get the currencies data with yfinance api
 
         Args:
             start_date (datetime): start date of data
             end_date (datetime): end data of data
             ticker (str): the symbol for the finance
+        
+        Return:
+            pandas DataFrame: downloaded data by yfinance
         """
         data: pd.DataFrame = yf.download(ticker, start=start_date, end=end_date)
-        data.to_csv(f"utils/data/{ticker}.csv")
+        return data
     
     def update(self):
         """Update the currencies data
@@ -26,6 +29,7 @@ class DataCollector:
         today = datetime.today()
         start = today.replace(today.year - 1)
         for currency in s.CURRENCIES:
-            self.get_data(start, today, currency)
+            data = self.get_data(start, today, currency)
+            data.to_csv(f"../data/{currency}.csv")
 
 
