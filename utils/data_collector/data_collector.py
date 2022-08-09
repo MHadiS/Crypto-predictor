@@ -6,4 +6,6 @@ from utils.data_collector import settings
 
 
 class DataCollector:
-    pass
+    """
+    A class for collecting currencies data to train the models
+    """
