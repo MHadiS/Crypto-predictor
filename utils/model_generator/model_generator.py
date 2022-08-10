@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
+import pickle as pkl
 from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeRegressor
 
 
 class ModelGenerator:
@@ -16,8 +18,22 @@ class ModelGenerator:
             tuple: a tuple of the sets
         """
         df = pd.read_csv(f"utils/data/{ticker}.csv")
-        X = np.array([i for i in range(df.shape[0])])
-        y = df["Close"].values
+        X = np.array([i for i in range(df.shape[0])]).reshape(-1, 1)
+        y = df["Close"].values.reshape(-1, 1)
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
         X_val, X_test, y_val, y_test = train_test_split(X_test, y_test, test_size=0.1)
         return X_train, X_test, X_val, y_train, y_test, y_val
+    
+    def generate_model(self, currency: str):
+        """ Generate a model for a specific currency
+
+        Args:
+            currency (str): the currency ticker
+
+        Returns:
+            DecisionTreeRegressor: the model
+        """
+        X_train, X_test, X_val, y_train, y_test, y_val = self.read_data(currency)
+        model = DecisionTreeRegressor()
+        model.fit(X_train, y_train)
+        return model
