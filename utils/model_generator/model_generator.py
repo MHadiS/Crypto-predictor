@@ -46,7 +46,7 @@ class ModelGenerator:
             model (DecisionTreeRegressor): the generated model
             currency (str): the currency ticker
         """
-        with open(f"utils/models/{currency}.csv", "wb") as f:
+        with open(f"utils/models/{currency}.model", "wb") as f:
             pkl.dump(model, f)
     
     def update(self):
