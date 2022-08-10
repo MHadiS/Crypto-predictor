@@ -1,6 +1,7 @@
 import pytest as pt
 import pickle as pkl
 import numpy as np
+from os import remove
 
 from utils import ModelGenerator
 
@@ -24,7 +25,9 @@ def test_generate_model(model_generator):
 
 def test_export_model(model_generator):
     model_generator.export_model(model, "test")
-    with open("utils/models/test.csv", "rb") as f:
+    file_path = "utils/models/test.model"
+    with open(file_path, "rb") as f:
         model2 = pkl.load(f)
+    remove(file_path)
     x = np.array([i for i in range(10)]).reshape(-1, 1)
     assert model.predict(x).all() == model2.predict(x).all()
