@@ -37,3 +37,13 @@ class ModelGenerator:
         model = DecisionTreeRegressor()
         model.fit(X_train, y_train)
         return model
+    
+    def export_model(self, model: DecisionTreeRegressor, currency: str):
+        """Export the generated model
+
+        Args:
+            model (DecisionTreeRegressor): the generated model
+            currency (str): the currency ticker
+        """
+        with open(f"utils/models/{currency}.csv", "wb") as f:
+            pkl.dump(model, f)
