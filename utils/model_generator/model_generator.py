@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import pickle as pkl
+import utils.settings as s
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeRegressor
 
@@ -47,3 +48,10 @@ class ModelGenerator:
         """
         with open(f"utils/models/{currency}.csv", "wb") as f:
             pkl.dump(model, f)
+    
+    def update(self):
+        """Update the models with the new data
+        """
+        for currency in s.CURRENCIES:
+            model = self.generate_model(currency)
+            self.export_model(model, currency)
