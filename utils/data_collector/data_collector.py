@@ -27,9 +27,9 @@ class DataCollector:
         """Update the currencies data
         """
         today = datetime.today()
-        start = today.replace(today.year - 1)
+        start = today.replace(today.year - 2)
         for currency in s.CURRENCIES:
             data = self.get_data(start, today, currency)
-            data.to_csv(f"../data/{currency}.csv")
+            data.to_csv(f"utils/data/{currency}.csv")
 
 
