@@ -1,5 +1,5 @@
 from .data_collector.data_collector import DataCollector
-from .data_collector.settings import CURRENCIES
+from .settings import CURRENCIES
 
 
 __all__ = (DataCollector, CURRENCIES)
