@@ -1,4 +1,6 @@
 import pytest as pt
+import pickle as pkl
+import numpy as np
 
 from utils import ModelGenerator
 
@@ -14,6 +16,15 @@ def test_read_data(model_generator):
 
 
 def test_generate_model(model_generator):
+    global model
     model = model_generator.generate_model("BTC-USD")
     score = model.score(X_test, y_test)
     assert int(score * 100) > 90
+
+
+def test_export_model(model_generator):
+    model_generator.export_model(model, "test")
+    with open("utils/models/test.csv", "rb") as f:
+        model2 = pkl.load(f)
+    x = np.array([i for i in range(10)]).reshape(-1, 1)
+    assert model.predict(x).all() == model2.predict(x).all()
