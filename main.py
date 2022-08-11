@@ -3,15 +3,43 @@ import pandas as pd
 import numpy as np
 from rich.console import Console
 from rich.table import Table
+import requests as r
 
 from utils import ModelGenerator, DataCollector, CURRENCIES
+
+
+def has_internet():
+    """check internet connection
+
+    Returns:
+        bool: if internet connection is available, returns True otherwise returns False
+    """
+    # initializing URL
+    url = "https://finance.yahoo.com/cryptocurrencies/"
+    timeout = 10
+    try:
+        # requesting URL
+        request = r.get(url, timeout=timeout)
+        return True
+  
+    # catching exception
+    except (r.ConnectionError, r.Timeout) as exception:
+        return False
+
 
 
 def main():
     """Run the program.
     """
-    # loading for updating the models
     console = Console()
+
+    #  check the internet connection
+    connected = has_internet()
+    if not connected:
+        console.log("[red bold] No internet connection available")
+        exit()
+    
+    # loading for updating the models
     model_generator = ModelGenerator()
     data_collector = DataCollector()
     with console.status("[bold green] Updating models...") as status:
@@ -23,7 +51,7 @@ def main():
     # make a table of predictions for each currencies
     table = Table(title="Table of predictions")
     table.add_column("Currencies")
-    table.add_column("Predictions")
+    table.add_column("Price")
     for currency in CURRENCIES:
 
         # load the models
