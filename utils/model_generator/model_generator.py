@@ -7,8 +7,8 @@ from sklearn.tree import DecisionTreeRegressor
 
 
 class ModelGenerator:
-    """Generate the models for making predictions
-    """
+    """Generate the models for making predictions"""
+
     def read_data(self, ticker: str) -> tuple:
         """Read the data about a currency and split ti training testing and validation set
 
@@ -24,9 +24,9 @@ class ModelGenerator:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
         X_val, X_test, y_val, y_test = train_test_split(X_test, y_test, test_size=0.1)
         return X_train, X_test, X_val, y_train, y_test, y_val
-    
+
     def generate_model(self, currency: str):
-        """ Generate a model for a specific currency
+        """Generate a model for a specific currency
 
         Args:
             currency (str): the currency ticker
@@ -38,7 +38,7 @@ class ModelGenerator:
         model = DecisionTreeRegressor()
         model.fit(X_train, y_train)
         return model
-    
+
     def export_model(self, model: DecisionTreeRegressor, currency: str):
         """Export the generated model
 
@@ -48,10 +48,9 @@ class ModelGenerator:
         """
         with open(f"utils/models/{currency}.model", "wb") as f:
             pkl.dump(model, f)
-    
+
     def update(self):
-        """Update the models with the new data
-        """
+        """Update the models with the new data"""
         for currency in s.CURRENCIES:
             model = self.generate_model(currency)
             self.export_model(model, currency)

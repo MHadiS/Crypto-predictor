@@ -21,16 +21,14 @@ def has_internet():
         # requesting URL
         request = r.get(url, timeout=timeout)
         return True
-  
+
     # catching exception
     except (r.ConnectionError, r.Timeout) as exception:
         return False
 
 
-
 def main():
-    """Run the program.
-    """
+    """Run the program."""
     console = Console()
 
     #  check the internet connection
@@ -38,7 +36,7 @@ def main():
     if not connected:
         console.log("[red bold] No internet connection available")
         exit()
-    
+
     # loading for updating the models
     model_generator = ModelGenerator()
     data_collector = DataCollector()
@@ -58,7 +56,7 @@ def main():
         # load the models
         with open(f"utils/models/{currency}.model", "rb") as f:
             model = pkl.load(f)
-        
+
         # read the currency data
         df = pd.read_csv(f"utils/data/{currency}.csv")
 
@@ -81,11 +79,11 @@ def main():
         else:
             row.append("0")
         table.add_row(*row)
-    
+
     # print table
     print("-" * 80)
     console.log(table)
-    
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
