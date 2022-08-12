@@ -52,17 +52,33 @@ def main():
     table = Table(title="Table of predictions")
     table.add_column("Currencies")
     table.add_column("Price")
+    table.add_column("Change")
     for currency in CURRENCIES:
 
         # load the models
         with open(f"utils/models/{currency}.model", "rb") as f:
             model = pkl.load(f)
         
-        # add row to table
+        # read the currency data
         df = pd.read_csv(f"utils/data/{currency}.csv")
+
+        # find current price
+        current_price = df["Close"].loc[len(df) - 1]
+
+        # predict the currency price
         x = np.array(df.shape[0] + 7).reshape(-1, 1)
         prediction = model.predict(x)[0]
-        table.add_row(currency, str(prediction))
+
+        # calculate the currency change
+        change = current_price - prediction
+
+        # add row to the table
+        row = [currency, str(prediction)]
+        if change > 0:
+            row.append(f"[green]+{change}")
+        else:
+            row.append(f"[red]-{change}")
+        table.add_row(*row)
     
     # print table
     print("-" * 80)
