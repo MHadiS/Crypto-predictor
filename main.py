@@ -76,8 +76,10 @@ def main():
         row = [currency, str(prediction)]
         if change > 0:
             row.append(f"[green]+{change}")
-        else:
+        elif change < 0:
             row.append(f"[red]-{change}")
+        else:
+            row.append("0")
         table.add_row(*row)
     
     # print table
