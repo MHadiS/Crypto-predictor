@@ -21,7 +21,7 @@ class ModelGenerator:
         df = pd.read_csv(f"utils/data/{ticker}.csv")
         X = np.array([i for i in range(df.shape[0])]).reshape(-1, 1)
         y = df["Close"].values.reshape(-1, 1)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
         X_val, X_test, y_val, y_test = train_test_split(X_test, y_test, test_size=0.1)
         return X_train, X_test, X_val, y_train, y_test, y_val
 
