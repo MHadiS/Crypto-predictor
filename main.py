@@ -8,82 +8,86 @@ import requests as r
 from utils import ModelGenerator, DataCollector, CURRENCIES
 
 
-def has_internet():
-    """check internet connection
-
-    Returns:
-        bool: if internet connection is available, returns True otherwise returns False
-    """
-    # initializing URL
-    url = "https://finance.yahoo.com/cryptocurrencies/"
-    timeout = 10
-    try:
-        # requesting URL
-        request = r.get(url, timeout=timeout)
-        return True
-
-    # catching exception
-    except (r.ConnectionError, r.Timeout) as exception:
-        return False
+class Main:
+    def __init__(self):
+        self.console = Console()
 
 
-def main():
-    """Run the program."""
-    console = Console()
+    @staticmethod
+    def has_internet():
+        """check internet connection
 
-    #  check the internet connection
-    connected = has_internet()
-    if not connected:
-        console.log("[red bold] No internet connection available")
-        exit()
+        Returns:
+            bool: if internet connection is available, returns True otherwise returns False
+        """
+        # initializing URL
+        url = "https://finance.yahoo.com/cryptocurrencies/"
+        timeout = 10
+        try:
+            # requesting URL
+            request = r.get(url, timeout=timeout)
+            return True
+    
+        # catching exception
+        except (r.ConnectionError, r.Timeout) as exception:
+            return False
 
-    # loading for updating the models
-    model_generator = ModelGenerator()
-    data_collector = DataCollector()
-    with console.status("[bold green] Updating models...") as status:
-        data_collector.update()
-        console.log("[cyan] Successfully updated data")
-        model_generator.update()
-        console.log("[cyan] Successfully updated models")
+    def run(self):
+        """Run the program."""
+        #  check the internet connection
+        connected = self.has_internet()
+        if not connected:
+            self.console.log("[red bold] No internet connection available")
+            exit()
 
-    # make a table of predictions for each currencies
-    table = Table(title="Table of predictions")
-    table.add_column("Currencies")
-    table.add_column("Price")
-    table.add_column("Change")
-    for currency in CURRENCIES:
+        # loading for updating the models
+        model_generator = ModelGenerator()
+        data_collector = DataCollector()
+        with self.console.status("[bold green] Updating models...") as status:
+            data_collector.update()
+            self.console.log("[cyan] Successfully updated data")
+            model_generator.update()
+            self.console.log("[cyan] Successfully updated models")
 
-        # load the models
-        with open(f"utils/models/{currency}.model", "rb") as f:
-            model = pkl.load(f)
+        # make a table of predictions for each currencies
+        table = Table(title="Table of predictions")
+        table.add_column("Currencies")
+        table.add_column("Price")
+        table.add_column("Change")
+        for currency in CURRENCIES:
 
-        # read the currency data
-        df = pd.read_csv(f"utils/data/{currency}.csv")
+            # load the models
+            with open(f"utils/models/{currency}.model", "rb") as f:
+                model = pkl.load(f)
 
-        # find current price
-        current_price = df["Close"].loc[len(df) - 1]
+            # read the currency data
+            df = pd.read_csv(f"utils/data/{currency}.csv")
 
-        # predict the currency price
-        x = np.array(df.shape[0] + 7).reshape(-1, 1)
-        prediction = model.predict(x)[0]
+            # find current price
+            current_price = df["Close"].loc[len(df) - 1]
 
-        # calculate the currency change
-        change = current_price - prediction
+            # predict the currency price
+            x = np.array(df.shape[0] + 7).reshape(-1, 1)
+            prediction = model.predict(x)[0]
 
-        # add row to the table
-        row = [currency, str(prediction)]
-        if change > 0:
-            row.append(f"[green]+{change}")
-        elif change < 0:
-            row.append(f"[red]{change}")
-        else:
-            row.append("0")
-        table.add_row(*row)
+            # calculate the currency change
+            change = current_price - prediction
 
-    # print table
-    print("-" * 80)
-    console.log(table)
+            # add row to the table
+            row = [currency, str(prediction)]
+            if change > 0:
+                row.append(f"[green]+{change}")
+            elif change < 0:
+                row.append(f"[red]{change}")
+            else:
+                row.append("0")
+            table.add_row(*row)
+
+        # print table
+        print("-" * 80)
+        self.console.log(table)
 
 
 if __name__ == "__main__":
-    main()
+    app = Main()
+    app.run()
