@@ -1,17 +1,42 @@
+import csv
 import pickle as pkl
 import pandas as pd
 import numpy as np
+import requests as r
+import argparse as ap
 from rich.console import Console
 from rich.table import Table
-import requests as r
 
 from utils import ModelGenerator, DataCollector, CURRENCIES
 
 
 class Main:
     def __init__(self):
+        """initializing some variables"""
         self.console = Console()
-
+        parser = ap.ArgumentParser(description="Predict currencies prices")
+        parser.add_argument(
+            "-du",
+            "--dont-update",
+            action="store_true",
+            help="do not update the models",
+        )
+        parser.add_argument(
+            "-o",
+            "--output",
+            metavar="file",
+            type=str,
+            help="output the prediction in a csv file",
+        )
+        parser.add_argument(
+            "-d",
+            "--days",
+            metavar="days",
+            type=int,
+            default=7,
+            help="number of days after today to predict for",
+        )
+        self.args = parser.parse_args()
 
     @staticmethod
     def has_internet():
@@ -27,14 +52,13 @@ class Main:
             # requesting URL
             request = r.get(url, timeout=timeout)
             return True
-    
+
         # catching exception
         except (r.ConnectionError, r.Timeout) as exception:
             return False
-    
+
     def update_models(self):
-        """Update the models
-        """
+        """Update the models"""
         model_generator = ModelGenerator()
         data_collector = DataCollector()
         with self.console.status("[bold green] Updating models...") as status:
@@ -44,21 +68,29 @@ class Main:
             self.console.log("[cyan] Successfully updated models")
 
     def run(self):
-        """Run the program
-        """
-        #  check the internet connection
-        connected = self.has_internet()
-        if not connected:
-            self.console.log("[red bold] No internet connection available")
-            exit()
+        """Run the program"""
+        if not self.args.dont_update:
+            #  check the internet connection
+            connected = self.has_internet()
+            if not connected:
+                self.console.log("[red bold] No internet connection available")
+                exit()
 
-        self.update_models()
-        
+            self.update_models()
+
         # make a table of predictions for each currencies
         table = Table(title="Table of predictions")
-        table.add_column("Currencies")
-        table.add_column("Price")
-        table.add_column("Change")
+        columns = ["Currencies", "Price", "Change"]
+        for column in columns:
+            table.add_column(column)
+
+        # if output is not None, write the header of csv file
+        if self.args.output is not None:
+            file = open(f"./{self.args.output}", 'a')
+            writer = csv.DictWriter(file, fieldnames=columns)
+            writer.writeheader()
+
+        # add the rows
         for currency in CURRENCIES:
 
             # load the models
@@ -72,25 +104,34 @@ class Main:
             current_price = df["Close"].loc[len(df) - 1]
 
             # predict the currency price
-            x = np.array(df.shape[0] + 7).reshape(-1, 1)
+            x = np.array(df.shape[0] + self.args.days).reshape(-1, 1)
             prediction = model.predict(x)[0]
 
             # calculate the currency change
             change = current_price - prediction
 
             # add row to the table
-            row = [currency, str(prediction)]
-            if change > 0:
-                row.append(f"[green]+{change}")
-            elif change < 0:
-                row.append(f"[red]{change}")
-            else:
-                row.append("0")
-            table.add_row(*row)
+            row = [currency, str(prediction), change]
+            if self.args.output is not None:
+                writer.writerow({columns[i]: row[i] for i in range(len(row))})
 
-        # print table
+            if change > 0:
+                row[-1] = f"[green]+{change}"
+            elif change < 0:
+                row[-1] = f"[red]{change}"
+            else:
+                row[-1] = "0"
+            table.add_row(*row)
+        
         print("-" * 80)
-        self.console.log(table)
+        
+        try:
+            # close the file
+            file.close()
+            self.console.log(f"[bold green]{self.args.output} successfully exported")
+        except NameError:
+            # print table
+            self.console.log(table)
 
 
 if __name__ == "__main__":
