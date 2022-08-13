@@ -11,8 +11,22 @@ def model_generator():
     return ModelGenerator()
 
 
+def model_score(model, X_test, X_val, y_test, y_val):
+    """Score the model based on the given test sets.
+    Args:
+        model (Unknown for now): the model to be tested.
+
+    Returns:
+        float: the score of the model
+    """
+    
+    score1 = model.score(X_test, y_test)
+    score2 = model.score(X_val, y_val)
+    return (score1 + score2) / 2
+
+
 def test_read_data(model_generator):
-    global X_train, X_test, X_val, y_train, y_test, y_val
+    global X_test, X_val, y_test, y_val
     X_train, X_test, X_val, y_train, y_test, y_val = model_generator.read_data(
         "BTC-USD"
     )
@@ -21,8 +35,8 @@ def test_read_data(model_generator):
 def test_generate_model(model_generator):
     global model
     model = model_generator.generate_model("BTC-USD")
-    score = model.score(X_test, y_test)
-    assert int(score * 100) > 90
+    score = model_score(model, X_test, X_val, y_test, y_val)
+    assert score > 0.9
 
 
 def test_export_model(model_generator):
