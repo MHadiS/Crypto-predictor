@@ -31,16 +31,10 @@ class Main:
         # catching exception
         except (r.ConnectionError, r.Timeout) as exception:
             return False
-
-    def run(self):
-        """Run the program."""
-        #  check the internet connection
-        connected = self.has_internet()
-        if not connected:
-            self.console.log("[red bold] No internet connection available")
-            exit()
-
-        # loading for updating the models
+    
+    def update_models(self):
+        """Update the models
+        """
         model_generator = ModelGenerator()
         data_collector = DataCollector()
         with self.console.status("[bold green] Updating models...") as status:
@@ -49,6 +43,17 @@ class Main:
             model_generator.update()
             self.console.log("[cyan] Successfully updated models")
 
+    def run(self):
+        """Run the program
+        """
+        #  check the internet connection
+        connected = self.has_internet()
+        if not connected:
+            self.console.log("[red bold] No internet connection available")
+            exit()
+
+        self.update_models()
+        
         # make a table of predictions for each currencies
         table = Table(title="Table of predictions")
         table.add_column("Currencies")
