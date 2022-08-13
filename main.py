@@ -75,7 +75,7 @@ def main():
         if change > 0:
             row.append(f"[green]+{change}")
         elif change < 0:
-            row.append(f"[red]-{change}")
+            row.append(f"[red]{change}")
         else:
             row.append("0")
         table.add_row(*row)
