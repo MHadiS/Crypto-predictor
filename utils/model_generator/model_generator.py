@@ -21,7 +21,9 @@ class ModelGenerator:
         df = pd.read_csv(f"utils/data/{ticker}.csv")
         X = np.array([i for i in range(df.shape[0])]).reshape(-1, 1)
         y = df["Close"].values.reshape(-1, 1)
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size=0.2, shuffle=False
+        )
         X_val, X_test, y_val, y_test = train_test_split(X_test, y_test, test_size=0.1)
         return X_train, X_test, X_val, y_train, y_test, y_val
 
@@ -32,18 +34,18 @@ class ModelGenerator:
             currency (str): the currency ticker
 
         Returns:
-            DecisionTreeRegressor: the model
+            Unknown for now: the model
         """
         X_train, X_test, X_val, y_train, y_test, y_val = self.read_data(currency)
         model = DecisionTreeRegressor()
         model.fit(X_train, y_train)
         return model
 
-    def export_model(self, model: DecisionTreeRegressor, currency: str):
+    def export_model(self, model: any, currency: str):
         """Export the generated model
 
         Args:
-            model (DecisionTreeRegressor): the generated model
+            model (Unknown for now): the generated model
             currency (str): the currency ticker
         """
         with open(f"utils/models/{currency}.model", "wb") as f:
@@ -54,3 +56,17 @@ class ModelGenerator:
         for currency in s.CURRENCIES:
             model = self.generate_model(currency)
             self.export_model(model, currency)
+    
+    def predict_price(self, model, currency: str, days: int):
+        """predict the price of a given currency
+
+        Args:
+            model (Unknown for now): the model to predict the price of currency
+            currency (str): the currency that we want to predict the price of
+            days (int): the days that we want to predict the price of currency(the days after today)
+        """
+        df = pd.read_csv(f"utils/data/{currency}.csv")
+        current_price = df["Close"].loc[len(df) - 1]
+        x = np.array(df.shape[0] + days).reshape(-1, 1)
+        prediction = model.predict(x)[0]
+        return current_price, prediction
