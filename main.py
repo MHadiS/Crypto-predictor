@@ -37,6 +37,8 @@ class Main:
             help="number of days after today to predict for",
         )
         self.args = parser.parse_args()
+        self.model_generator = ModelGenerator()
+        self.data_collector = DataCollector()
 
     @staticmethod
     def has_internet():
@@ -59,12 +61,11 @@ class Main:
 
     def update_models(self):
         """Update the models"""
-        model_generator = ModelGenerator()
-        data_collector = DataCollector()
+
         with self.console.status("[bold green] Updating models...") as status:
-            data_collector.update()
+            self.data_collector.update()
             self.console.log("[cyan] Successfully updated data")
-            model_generator.update()
+            self.model_generator.update()
             self.console.log("[cyan] Successfully updated models")
 
     def run(self):
@@ -86,7 +87,7 @@ class Main:
 
         # if output is not None, write the header of csv file
         if self.args.output is not None:
-            file = open(f"./{self.args.output}", 'a')
+            file = open(f"./{self.args.output}", "a")
             writer = csv.DictWriter(file, fieldnames=columns)
             writer.writeheader()
 
@@ -97,15 +98,10 @@ class Main:
             with open(f"utils/models/{currency}.model", "rb") as f:
                 model = pkl.load(f)
 
-            # read the currency data
-            df = pd.read_csv(f"utils/data/{currency}.csv")
-
-            # find current price
-            current_price = df["Close"].loc[len(df) - 1]
-
-            # predict the currency price
-            x = np.array(df.shape[0] + self.args.days).reshape(-1, 1)
-            prediction = model.predict(x)[0]
+            # make the predictions for the currency
+            current_price, prediction = self.model_generator.predict_price(
+                model, currency, self.args.days
+            )
 
             # calculate the currency change
             change = current_price - prediction
@@ -122,9 +118,9 @@ class Main:
             else:
                 row[-1] = "0"
             table.add_row(*row)
-        
+
         print("-" * 80)
-        
+
         try:
             # close the file
             file.close()
