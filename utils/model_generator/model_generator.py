@@ -56,17 +56,3 @@ class ModelGenerator:
         for currency in s.CURRENCIES:
             model = self.generate_model(currency)
             self.export_model(model, currency)
-    
-    def predict_price(self, model, currency: str, days: int):
-        """predict the price of a given currency
-
-        Args:
-            model (Unknown for now): the model to predict the price of currency
-            currency (str): the currency that we want to predict the price of
-            days (int): the days that we want to predict the price of currency(the days after today)
-        """
-        df = pd.read_csv(f"utils/data/{currency}.csv")
-        current_price = df["Close"].loc[len(df) - 1]
-        x = np.array(df.shape[0] + days).reshape(-1, 1)
-        prediction = model.predict(x)[0]
-        return current_price, prediction

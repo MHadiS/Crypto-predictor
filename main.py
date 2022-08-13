@@ -67,6 +67,20 @@ class Main:
             self.console.log("[cyan] Successfully updated data")
             self.model_generator.update()
             self.console.log("[cyan] Successfully updated models")
+    
+    def predict_price(self, model, currency: str, days: int):
+        """Predict the price of a given currency
+
+        Args:
+            model (Unknown for now): the model to predict the price of currency
+            currency (str): the currency that we want to predict the price of
+            days (int): the days that we want to predict the price of currency(the days after today)
+        """
+        df = pd.read_csv(f"utils/data/{currency}.csv")
+        current_price = df["Close"].loc[len(df) - 1]
+        x = np.array(df.shape[0] + days).reshape(-1, 1)
+        prediction = model.predict(x)[0]
+        return current_price, prediction
 
     def run(self):
         """Run the program"""
@@ -99,7 +113,7 @@ class Main:
                 model = pkl.load(f)
 
             # make the predictions for the currency
-            current_price, prediction = self.model_generator.predict_price(
+            current_price, prediction = self.predict_price(
                 model, currency, self.args.days
             )
 
