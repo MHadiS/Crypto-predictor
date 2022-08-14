@@ -60,6 +60,7 @@ def main():
         "requests",
         "argparse",
         "yfinance",
+        "pytest",
     ]
     want_venv = input("Do you want to install dependencies in a venv? [y/n]: ").lower()
     python_path = sys.executable
@@ -70,6 +71,7 @@ def main():
             python_path += "\\Scripts\\python"
         else:
             python_path += "/bin/python3"
+
     install(python_path, dependencies)
     print("All done.")
 
