@@ -28,10 +28,10 @@ def install(python_path, packages):
         dependencies (list): A list of dependency names.
     """
     for package in packages:
+        print("\n", "\033[95m=" * 80, "\n")
         print(f"\033[93m Installing {package}... \033[1m")
         run(python_path + " -m pip install " + package)
         print(f"\033[92m {package} installed successfully. \033[1m")
-        print("\033[95m=" * 80, "\n")
 
 
 def make_venv(name: str):
@@ -73,7 +73,9 @@ def main():
             python_path += "/bin/python3"
 
     install(python_path, dependencies)
-    print("All done.")
+    print("\n", "\033[95m=" * 80, "\n")
+    print("\033[4m\033[96mAll done.\033[4m")
+    print("\033[37m \033[0m")
 
 
 if __name__ == "__main__":
