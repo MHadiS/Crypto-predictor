@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import requests as r
 import argparse as ap
+import matplotlib.pyplot as plt
 from rich.console import Console
 from rich.table import Table
 
@@ -35,6 +36,12 @@ class Main:
             type=int,
             default=7,
             help="number of days after today to predict for",
+        )
+        parser.add_argument(
+            "-p",
+            "--plot",
+            action="store_true",
+            help="make a plot of data and models prediction"
         )
         self.args = parser.parse_args()
         self.model_generator = ModelGenerator()
@@ -95,6 +102,22 @@ class Main:
 
         prediction = self.model_generator.predict(model, x)[0]
         return current_price, prediction
+        
+    def make_plot(self, model, currency: str):
+        df = self.read_currency_data(currency)
+        x, y = np.arange(0, len(df), 1).reshape(-1, 1), df["Close"].values.reshape(-1, 1)
+        fig = plt.figure(figsize=(20, 10))
+        plt.title(f"{currency} plot")
+        plt.xlabel("Date")
+        plt.ylabel("Price")
+        plt.scatter(x, y)
+        plt.plot(df.index, self.model_generator.predict(model, x), color="orange")
+        plt.legend(
+            labels=("Data",
+                    "Prediction"),
+            loc="upper left"
+        )
+        plt.savefig(f"{currency}.png")
 
     def run(self):
         """Run the program"""
@@ -141,11 +164,17 @@ class Main:
 
             if change > 0:
                 row[-1] = f"[green]+{change}"
+        
             elif change < 0:
                 row[-1] = f"[red]{change}"
+        
             else:
                 row[-1] = "0"
             table.add_row(*row)
+
+            # export the currency price and model prediction plot
+            if self.args.plot is not None:
+                self.make_plot(model, currency)
 
         print("-" * 80)
 
