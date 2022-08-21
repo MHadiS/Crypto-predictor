@@ -138,7 +138,7 @@ class Main:
             self.update_models()
 
         # make a table of predictions for each currencies
-        table = Table(title="Table of predictions")
+        table = Table(title=f"Table of predictions for {self.args.days} days later")
         columns = ["Currencies", "Price", "Change"]
         for column in columns:
             table.add_column(column)
