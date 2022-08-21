@@ -4,11 +4,15 @@ import pickle as pkl
 import utils.settings as s
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
 
 
 class ModelGenerator:
     """Generate the models for making predictions"""
+
+    def __init__(self) -> None:
+        """Initialize some variables"""
+        self.poly_reg = PolynomialFeatures(degree=2)
 
     def read_data(self, ticker: str) -> tuple:
         """Read the data about a currency and split ti training testing and validation set
@@ -21,8 +25,7 @@ class ModelGenerator:
         """
         df = pd.read_csv(f"utils/data/{ticker}.csv")
         X = np.array([i for i in range(df.shape[0])]).reshape(-1, 1)
-        self.degree = 10
-        self.poly_reg = PolynomialFeatures(degree=self.degree)
+
         X_poly = self.poly_reg.fit_transform(X)
         y = df["Close"].values.reshape(-1, 1)
         X_train, X_test, y_train, y_test = train_test_split(
@@ -40,8 +43,8 @@ class ModelGenerator:
         Returns:
             Unknown for now: the model
         """
-        X_train, X_test, X_val, y_train, y_test, y_val = self.read_data(currency)
-        model = LinearRegression()
+        X_train, _, _, y_train, _, _ = self.read_data(currency)
+        model = Ridge(alpha=0.001)
         model.fit(X_train, y_train)
         return model
 
