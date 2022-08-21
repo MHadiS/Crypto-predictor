@@ -88,10 +88,12 @@ class Main:
             currency (str): the currency that we want to predict the price of
             days (int): the days that we want to predict the price of currency(the days after today)
         """
-        df = pd.read_csv(f"utils/data/{currency}.csv")
+        
+        df = self.read_currency_data(currency)
         current_price = df["Close"].loc[len(df) - 1]
         x = np.array(df.shape[0] + days).reshape(-1, 1)
-        prediction = model.predict(x)[0]
+
+        prediction = self.model_generator.predict(model, x)[0]
         return current_price, prediction
 
     def run(self):
