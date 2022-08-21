@@ -180,7 +180,7 @@ class Main:
             table.add_row(*row)
 
             # export the currency price and model prediction plot
-            if self.args.plot is not None:
+            if self.args.plot:
                 self.make_plot(model, currency)
 
         print("-" * 80)
