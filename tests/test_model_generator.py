@@ -19,7 +19,7 @@ def model_score(model, X_test, X_val, y_test, y_val):
     Returns:
         float: the score of the model
     """
-    
+
     score1 = model.score(X_test, y_test)
     score2 = model.score(X_val, y_val)
     return (score1 + score2) / 2
@@ -46,4 +46,4 @@ def test_export_model(model_generator):
         model2 = pkl.load(f)
     remove(file_path)
     x = np.array([i for i in range(10)]).reshape(-1, 1)
-    assert model.predict(x).all() == model2.predict(x).all()
+    assert model_generator.predict(model, x).all() == model_generator.predict(model2, x).all()
