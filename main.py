@@ -104,6 +104,12 @@ class Main:
         return current_price, prediction
         
     def make_plot(self, model, currency: str):
+        """Plot the currency price and the model prediction
+
+        Args:
+            model (Unknown for now): the model
+            currency (str): the currency ticker symbol
+        """
         df = self.read_currency_data(currency)
         x, y = np.arange(0, len(df), 1).reshape(-1, 1), df["Close"].values.reshape(-1, 1)
         fig = plt.figure(figsize=(20, 10))
