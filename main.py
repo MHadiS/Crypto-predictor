@@ -68,6 +68,10 @@ class Main:
             self.model_generator.update()
             self.console.log("[cyan] Successfully updated models")
     
+    @staticmethod
+    def read_currency_data(currency: str):
+        return pd.read_csv(f"utils/data/{currency}.csv")
+    
     def predict_price(self, model, currency: str, days: int):
         """Predict the price of a given currency
 
