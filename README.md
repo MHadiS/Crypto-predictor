@@ -8,11 +8,11 @@ This project predicts the price of crypto currencies with a polynomial regressio
 
 - [Desecration](#description)
   - [How my project works ?](#how-does-my-project-work)
-  - [Why I used elastic-net regression ?](#why-i-used-elastic-net-regression)
+  - [Why I used polynomial regression ?](#why-i-used-polynomial-regression)
 - [Install Requirements](#install-requirements)
 - [Usage](#usage)
   - [How to use the project ?](#how-to-use-the-project)
-  - [How to run tests ?](#how-to-run-tests)
+  - [How to run the tests ?](#how-to-run-the-tests)
 
 ## Description
 
