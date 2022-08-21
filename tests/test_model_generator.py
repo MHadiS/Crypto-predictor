@@ -14,7 +14,7 @@ def model_generator():
 def model_score(model, X_test, X_val, y_test, y_val):
     """Score the model based on the given test sets.
     Args:
-        model (Unknown for now): the model to be tested.
+        model (sklean.linear_model.ElasticNet): the model to be tested.
 
     Returns:
         float: the score of the model

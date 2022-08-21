@@ -91,7 +91,7 @@ class Main:
         """Predict the price of a given currency
 
         Args:
-            model (Unknown for now): the model to predict the price of currency
+            model (sklean.linear_model.ElasticNet): the model to predict the price of currency
             currency (str): the currency that we want to predict the price of
             days (int): the days that we want to predict the price of currency(the days after today)
         """
@@ -107,7 +107,7 @@ class Main:
         """Plot the currency price and the model prediction
 
         Args:
-            model (Unknown for now): the model
+            model (sklean.linear_model.ElasticNet): the model
             currency (str): the currency ticker symbol
         """
         df = self.read_currency_data(currency)

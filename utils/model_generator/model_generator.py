@@ -4,7 +4,7 @@ import pickle as pkl
 import utils.settings as s
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import ElasticNet
 
 
 class ModelGenerator:
@@ -12,7 +12,7 @@ class ModelGenerator:
 
     def __init__(self) -> None:
         """Initialize some variables"""
-        self.poly_reg = PolynomialFeatures(degree=2)
+        self.poly_reg = PolynomialFeatures(degree=20)
 
     def read_data(self, ticker: str) -> tuple:
         """Read the data about a currency and split ti training testing and validation set
@@ -29,7 +29,7 @@ class ModelGenerator:
         X_poly = self.poly_reg.fit_transform(X)
         y = df["Close"].values.reshape(-1, 1)
         X_train, X_test, y_train, y_test = train_test_split(
-            X_poly, y, test_size=0.2, shuffle=False
+            X_poly, y, test_size=0.2
         )
         X_val, X_test, y_val, y_test = train_test_split(X_test, y_test, test_size=0.1)
         return X_train, X_test, X_val, y_train, y_test, y_val
@@ -41,28 +41,28 @@ class ModelGenerator:
             currency (str): the currency ticker
 
         Returns:
-            Unknown for now: the model
+            sklean.linear_model.ElasticNet: the model
         """
         X_train, _, _, y_train, _, _ = self.read_data(currency)
-        model = Ridge(alpha=0.001)
+        model = ElasticNet()
         model.fit(X_train, y_train)
         return model
 
-    def export_model(self, model: any, currency: str):
+    def export_model(self, model: ElasticNet, currency: str):
         """Export the generated model
 
         Args:
-            model (Unknown for now): the generated model
+            model (sklean.linear_model.ElasticNet): the generated model
             currency (str): the currency ticker
         """
         with open(f"utils/models/{currency}.model", "wb") as f:
             pkl.dump(model, f)
     
-    def predict(self, model, x: np.array) -> np.array:
+    def predict(self, model: ElasticNet, x: np.array) -> np.array:
         """Make prediction with the model model
 
         Args:
-            model (Unknown for now): the model
+            model (sklean.linear_model.ElasticNet): the model
             x (np.array): the input of the model
 
         Returns:
