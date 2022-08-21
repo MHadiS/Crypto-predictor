@@ -1,6 +1,6 @@
 # CryptoPredictor : a crypto currency price predictor
 
-## What my project does ?
+## What my project does
 
 This project predicts the price of crypto currencies with a polynomial regression algorithm.
 
@@ -16,7 +16,7 @@ This project predicts the price of crypto currencies with a polynomial regressio
 
 ## Description
 
-### How does my project work ?
+### How does my project work
 
 My project is divided into three parts `data_collector` `model_generator` and a `main.py` file that puts all of the abilities together and runs the program.
 
@@ -26,7 +26,7 @@ My project is divided into three parts `data_collector` `model_generator` and a 
 
 `main.py` runs the program and shows the prediction in terminal with rich library.
 
-### Why I used polynomial regression ?
+### Why I used polynomial regression
 
 Now I'm just a student in machine learning. I have just learned some regression algorithms and I want to write a project with the new things I learned.
 
@@ -51,7 +51,7 @@ pytest
 
 ## Usage
 
-### How to use the project ?
+### How to use the project
 
 For running the program run `main.py`
 
@@ -83,7 +83,7 @@ optional arguments:
 
 for predicting other currencies price just add the ticker symbol of them to CURRENCIES constant in utils/setting.py
 
-### How to run the tests ?
+### How to run the tests
 
 It's easy just use pytest and run this command:
 
