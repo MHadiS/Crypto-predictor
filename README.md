@@ -99,16 +99,10 @@ It's easy just use pytest and run this command:
 pytest tests
 ```
 
-if you want you can run test with flack8 and mypy
+if you want you can run test with flack8
 
 Flake8:
 
 ```command
 flake8 .
-```
-
-Mypy:
-
-```command
-mypy .
 ```
