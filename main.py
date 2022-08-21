@@ -70,6 +70,14 @@ class Main:
     
     @staticmethod
     def read_currency_data(currency: str):
+        """Read a currency data into
+
+        Args:
+            currency (str): currency ticker symbol
+
+        Returns:
+            pd.DataFrame: the currency price data
+        """
         return pd.read_csv(f"utils/data/{currency}.csv")
     
     def predict_price(self, model, currency: str, days: int):
