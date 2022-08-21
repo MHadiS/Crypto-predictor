@@ -91,6 +91,8 @@ optional arguments:
   -p, --plot            make a plot of data and models prediction
 ```
 
+for predicting other currencies price just add the ticker symbol of them to CURRENCIES constant in utils/setting.py
+
 ### How to run the tests ?
 
 It's easy just use pytest and run this command:
