@@ -2,13 +2,9 @@
 
 ## What my project does ?
 
----
-
 This project predicts the price of crypto currencies with a polynomial regression algorithm.
 
 ## Contents
-
----
 
 - [Desecration](#description)
   - [How my project works ?](#how-does-my-project-work)
@@ -19,8 +15,6 @@ This project predicts the price of crypto currencies with a polynomial regressio
   - [How to run tests ?](#how-to-run-tests)
 
 ## Description
-
----
 
 ### How does my project work ?
 
@@ -40,8 +34,6 @@ I used polynomial regression because the data wasn't always linear but there was
 
 ## Install Requirements
 
----
-
 1. python version 3 or higher
 2. some libraries that you can install by running `install_dependencies.py`. if you are curious this list is for you.
 
@@ -58,8 +50,6 @@ pytest
 ```
 
 ## Usage
-
----
 
 ### How to use the project ?
 
