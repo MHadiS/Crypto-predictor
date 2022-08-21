@@ -27,9 +27,7 @@ def model_score(model, X_test, X_val, y_test, y_val):
 
 def test_read_data(model_generator):
     global X_test, X_val, y_test, y_val
-    _, X_test, X_val, _, y_test, y_val = model_generator.read_data(
-        "BTC-USD"
-    )
+    _, X_test, X_val, _, y_test, y_val = model_generator.read_data("BTC-USD")
 
 
 def test_generate_model(model_generator):
@@ -47,6 +45,9 @@ def test_export_model(model_generator):
         model2 = pkl.load(f)
     remove(file_path)
     x = np.array([i for i in range(10)]).reshape(-1, 1)
-    assert model_generator.predict(model, x).all() == model_generator.predict(model2, x).all()
+    assert (
+        model_generator.predict(model, x).all()
+        == model_generator.predict(model2, x).all()
+    )
     assert model_score(model, X_test, X_val, y_test, y_val) > 0.8
     assert model_score(model2, X_test, X_val, y_test, y_val) > 0.8

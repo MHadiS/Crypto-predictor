@@ -1,10 +1,11 @@
 import pandas as pd
 import numpy as np
 import pickle as pkl
-import utils.settings as s
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import ElasticNet
+
+import utils.settings as s
 
 
 class ModelGenerator:
@@ -15,7 +16,8 @@ class ModelGenerator:
         self.poly_reg = PolynomialFeatures(degree=20)
 
     def read_data(self, ticker: str) -> tuple:
-        """Read the data about a currency and split ti training testing and validation set
+        """Read the data about a currency and split it-
+            training testing and validation set
 
         Args:
             ticker (str): the currency ticker
@@ -31,7 +33,9 @@ class ModelGenerator:
         X_train, X_test, y_train, y_test = train_test_split(
             X_poly, y, test_size=0.2
         )
-        X_val, X_test, y_val, y_test = train_test_split(X_test, y_test, test_size=0.1)
+        X_val, X_test, y_val, y_test = train_test_split(
+            X_test, y_test, test_size=0.1
+        )
         return X_train, X_test, X_val, y_train, y_test, y_val
 
     def generate_model(self, currency: str):
@@ -57,7 +61,7 @@ class ModelGenerator:
         """
         with open(f"utils/models/{currency}.model", "wb") as f:
             pkl.dump(model, f)
-    
+
     def predict(self, model: ElasticNet, x: np.array) -> np.array:
         """Make prediction with the model model
 

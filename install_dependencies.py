@@ -13,9 +13,8 @@ def run(command):
     Args:
         command (str): The command to run
     """
-    command = command.split(' ')
-    subprocess.call(command,
-                    stdout=subprocess.DEVNULL,
+    command = command.split(" ")
+    subprocess.call(command, stdout=subprocess.DEVNULL,
                     stderr=subprocess.STDOUT)
 
 
@@ -49,8 +48,7 @@ def make_venv(name: str):
 
 
 def main():
-    """Install the dependencies
-    """
+    """Install the dependencies"""
     dependencies = [
         "pandas",
         "numpy",
@@ -62,7 +60,9 @@ def main():
         "yfinance",
         "pytest",
     ]
-    want_venv = input("Do you want to install dependencies in a venv? [y/n]: ").lower()
+    want_venv = input(
+        "Do you want to install dependencies in a venv? [y/n]: "
+    ).lower()
     python_path = sys.executable
     if want_venv == "y":
         make_venv("dependencies")

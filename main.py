@@ -41,7 +41,7 @@ class Main:
             "-p",
             "--plot",
             action="store_true",
-            help="make a plot of data and models prediction"
+            help="make a plot of data and models prediction",
         )
         self.args = parser.parse_args()
         self.model_generator = ModelGenerator()
@@ -52,29 +52,30 @@ class Main:
         """check internet connection
 
         Returns:
-            bool: if internet connection is available, returns True otherwise returns False
+            bool: if internet connection is available,
+            returns True otherwise returns False
         """
         # initializing URL
         url = "https://finance.yahoo.com/cryptocurrencies/"
         timeout = 10
         try:
             # requesting URL
-            request = r.get(url, timeout=timeout)
+            r.get(url, timeout=timeout)
             return True
 
         # catching exception
-        except (r.ConnectionError, r.Timeout) as exception:
+        except r.ConnectionError or r.Timeout:
             return False
 
     def update_models(self):
         """Update the models"""
 
-        with self.console.status("[bold green] Updating models...") as status:
+        with self.console.status("[bold green] Updating models...") as _:
             self.data_collector.update()
             self.console.log("[cyan] Successfully updated data")
             self.model_generator.update()
             self.console.log("[cyan] Successfully updated models")
-    
+
     @staticmethod
     def read_currency_data(currency: str):
         """Read a currency data into
@@ -86,23 +87,25 @@ class Main:
             pd.DataFrame: the currency price data
         """
         return pd.read_csv(f"utils/data/{currency}.csv")
-    
+
     def predict_price(self, model, currency: str, days: int):
         """Predict the price of a given currency
 
         Args:
-            model (sklean.linear_model.ElasticNet): the model to predict the price of currency
+            model (sklean.linear_model.ElasticNet): the model to predict the-
+            price of currency
             currency (str): the currency that we want to predict the price of
-            days (int): the days that we want to predict the price of currency(the days after today)
+            days (int): the days that we want to predict the price of-
+            currency(the days after today)
         """
-        
+
         df = self.read_currency_data(currency)
         current_price = df["Close"].loc[len(df) - 1]
         x = np.array(df.shape[0] + days).reshape(-1, 1)
 
         prediction = self.model_generator.predict(model, x)[0]
         return current_price, prediction
-        
+
     def make_plot(self, model, currency: str):
         """Plot the currency price and the model prediction
 
@@ -111,18 +114,16 @@ class Main:
             currency (str): the currency ticker symbol
         """
         df = self.read_currency_data(currency)
-        x, y = np.arange(0, len(df), 1).reshape(-1, 1), df["Close"].values.reshape(-1, 1)
-        fig = plt.figure(figsize=(20, 10))
+        x = np.arange(0, len(df), 1).reshape(-1, 1)
+        y = df["Close"].values.reshape(-1, 1)
+        plt.figure(figsize=(20, 10))
         plt.title(f"{currency} plot")
         plt.xlabel("Date")
         plt.ylabel("Price")
         plt.scatter(x, y)
-        plt.plot(df.index, self.model_generator.predict(model, x), color="orange")
-        plt.legend(
-            labels=("Data",
-                    "Prediction"),
-            loc="upper left"
-        )
+        plt.plot(df.index, self.model_generator.predict(model, x),
+                 color="orange")
+        plt.legend(labels=("Data", "Prediction"), loc="upper left")
         plt.savefig(f"{currency}.png")
 
     def run(self):
@@ -170,10 +171,10 @@ class Main:
 
             if change > 0:
                 row[-1] = f"[green]+{change}"
-        
+
             elif change < 0:
                 row[-1] = f"[red]{change}"
-        
+
             else:
                 row[-1] = "0"
             table.add_row(*row)
@@ -187,7 +188,9 @@ class Main:
         try:
             # close the file
             file.close()
-            self.console.log(f"[bold green]{self.args.output} successfully exported")
+            self.console.log(
+                f"[bold green]{self.args.output} successfully exported"
+            )
         except NameError:
             # print table
             self.console.log(table)
