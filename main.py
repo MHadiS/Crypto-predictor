@@ -139,7 +139,7 @@ class Main:
 
         # make a table of predictions for each currencies
         table = Table(title=f"Table of predictions for {self.args.days} days later")
-        columns = ["Currencies", "Price", "Change"]
+        columns = ["Currencies", "Predicted Price", "Currrent Price", "Change"]
         for column in columns:
             table.add_column(column)
 
@@ -162,10 +162,10 @@ class Main:
             )
 
             # calculate the currency change
-            change = current_price - prediction
+            change = prediction - current_price
 
             # add row to the table
-            row = [currency, str(prediction), change]
+            row = [currency, str(prediction), str(current_price), change]
             if self.args.output is not None:
                 writer.writerow({columns[i]: row[i] for i in range(len(row))})
 
@@ -183,7 +183,7 @@ class Main:
             if self.args.plot:
                 self.make_plot(model, currency)
 
-        print("-" * 80)
+        print("-" * 90)
 
         try:
             # close the file
